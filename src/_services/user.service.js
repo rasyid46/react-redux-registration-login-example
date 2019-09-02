@@ -11,18 +11,22 @@ export const userService = {
     delete: _delete
 };
 
-function login(username, password) {
+function login(phone, password) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ phone, password })
     };
+    console.log('aaaa');
+    console.log(phone, password);
 
-    return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
+    return fetch(`${config.apiUrl}int/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
+            console.log('login');
+            console.log(user);
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(user.contents));
 
             return user;
         });
@@ -30,6 +34,11 @@ function login(username, password) {
 
 function logout() {
     // remove user from local storage to log user out
+     const requestOptions = {
+         method: 'POST',
+         headers: authHeader()
+     };
+    // fetch(`${config.apiUrl}int/logout`, requestOptions).then(handleResponse);
     localStorage.removeItem('user');
 }
 
@@ -39,7 +48,7 @@ function getAll() {
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}int/user/list_user`, requestOptions).then(handleResponse);
 }
 
 function getById(id) {
@@ -74,11 +83,11 @@ function update(user) {
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {
     const requestOptions = {
-        method: 'DELETE',
+        method: 'POST',
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}int/user/delete/${id}`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {

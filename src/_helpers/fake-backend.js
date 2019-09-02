@@ -55,6 +55,7 @@ export function configureFakeBackend() {
                     // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
                     if (opts.headers && opts.headers.Authorization === 'Bearer fake-jwt-token') {
                         // find user by id in users array
+                        alert(1);
                         let urlParts = url.split('/');
                         let id = parseInt(urlParts[urlParts.length - 1]);
                         let matchedUsers = users.filter(user => { return user.id === id; });
